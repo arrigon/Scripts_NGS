@@ -1,0 +1,7 @@
+alldata = read.delim("EPH1.csv", header = T, sep = "\t")
+
+for(i in levels(alldata[, 1])){
+  subset = alldata[ alldata[, 1] == i,]
+  subset$Tag = paste(prefix, subset[, 3], sep = "_")
+  write.table(subset[, c(4, 2)], file = paste(paste("Barcodes_MAS", prefix, i, sep = "_"), ".txt", sep = ""), col.names = F, row.names = F, sep = "\t", quote = F)
+  }
