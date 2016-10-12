@@ -1,0 +1,54 @@
+#!/bin/perl
+#####################################
+#### Extracts first sequence of a fasta file
+#### prefixes sequence header with file name
+#####################################
+use File::Basename;
+
+my $infile = $ARGV[0];
+my $outfile = $ARGV[1];
+
+
+chomp($infile);
+chomp($outfile);
+
+
+$bsn = basename($infile);
+$bsn =~ s/\..*$//;
+
+
+## import fasta file
+open(FILE, "$infile");
+local $/ = undef; #slurp, mode
+my $input = <FILE>;
+local $/ = "\n";
+my @fields = split(/\>/, $input);
+shift(@fields);
+close(FILE);
+
+
+## load it into hash. Note that %fasta contains your sequences. Can be reused elsewhere.
+my %fasta;
+my @accs;
+foreach my $input (@fields){
+  my @tmp = split(/\n/, $input, 2);
+  $_ = $tmp[1];
+  s/\r|\n//g;
+  $seq = uc $_; #turn everything in uppercase
+  $fasta{$tmp[0]} = $seq; 
+  push(@accs, $tmp[0])
+  }
+
+
+## print sequences of interest into output
+open(OUT, ">$outfile");
+my $cnt = 0;
+foreach $head (@accs){
+  chomp($head);
+  $head =~ /;size=(.*);/;
+  my $cov = $1;
+  my $seq = $fasta{$head};
+  print(OUT ">$bsn\_seq$cnt\_cov=$cov\n$seq\n");
+  $cnt++;
+  }
+close(OUT);
