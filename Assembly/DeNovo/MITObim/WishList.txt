@@ -1,0 +1,15 @@
+MEG1_24_1.fq_1	24-1.fasta
+MEG1_24_2.fq_1	24-2.fasta
+MEG1_24_4.fq_1	24-4.fasta
+MEG1_24_5.fq_1	24-5.fasta
+MEG1_24_9.fq_1	24-9.fasta
+MEG1_24_16.fq_1	24-16.fasta
+MEG1_24_21.fq_1	24-21.fasta
+MEG1_24_22.fq_1	24-22.fasta
+MEG1_24_23.fq_1	24-23.fasta
+MEG1_24_24.fq_1	24-24.fasta
+MEG25_32_25.fq_1	25-32-1.fasta
+MEG25_32_26.fq_1	25-32-2.fasta
+MEG25_32_27.fq_1	25-32-3.fasta
+MEG25_32_28.fq_1	25-32-4.fasta
+MEG25_32_30.fq_1	25-32-6.fasta

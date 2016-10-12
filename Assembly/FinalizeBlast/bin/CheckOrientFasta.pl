@@ -1,0 +1,85 @@
+#!/bin/perl
+#####################################
+#### Orients properly fasta files (according to first sequence in fasta file)
+#####################################
+
+### Script params
+my $infile = $ARGV[0];
+my $outfile = $ARGV[1];
+chomp($infile);
+chomp($outfile);
+
+# path to uclust
+my $usearch = "usearch7.0.1090_i86linux32";
+
+
+### run ublast
+my $command = "head -n 2 $infile > $infile.seed";
+print("$command\n");
+system($command);
+
+my $command = "$usearch -makeudb_ublast $infile.seed -output $infile.udb";
+print("$command\n");
+system($command);
+
+my $command = "$usearch -ublast $infile -db $infile.udb -evalue 1e-2 -strand both -uc $infile.ublast";
+print("$command\n");
+system($command);
+
+
+#### load ublast uc output
+open(IN, "$infile.ublast");
+my %listID;
+while(<IN>){
+  chomp();
+  my @fields = split("\t", $_);
+  my $marker = $fields[8];
+  my $rc = $fields[4];
+  $listID{$marker} = $rc;
+  }
+
+
+## import fasta file
+open(FILE, "$infile");
+local $/ = undef; #slurp, mode
+my $input = <FILE>;
+local $/ = "\n";
+my @fields = split(/\>/, $input);
+shift(@fields);
+close(FILE);
+
+## load it into hash. Note that %fasta contains your sequences. Can be reused elsewhere.
+my %fasta;
+my @accs;
+foreach my $input (@fields){
+  my @tmp = split(/\n/, $input, 2);
+  $_ = $tmp[1];
+  s/\r|\n//g;
+  $seq = uc $_; #turn everything in uppercase
+  $fasta{$tmp[0]} = $seq; 
+  push(@accs, $tmp[0])
+  }
+
+
+## print sequences of interest into output
+open(OUT, ">$outfile");
+my $cnt = 0;
+foreach $head (@accs){
+  chomp($head);
+  my $orient = $listID{$head};  
+  my $seq = $fasta{$head};
+  if($orient =~ /\-/){
+    $seq =~ tr/ATCG/TAGC/;
+    $seq = reverse($seq);
+    }
+
+  if($orient =~ /\-|\+/){
+    print(OUT ">$head\n$seq\n");
+    $cnt++;
+    }
+  }
+close(OUT);
+
+my $command = "rm $infile.seed $infile.udb $infile.ublast";
+print("$command\n");
+system($command);
