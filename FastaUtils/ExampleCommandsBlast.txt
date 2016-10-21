@@ -1,0 +1,6 @@
+## Prepare a blast db
+makeblastdb -in database.fas -dbtype nucl
+
+## run a blast search
+tblastx -db database.fas -query Query.fas -num_threads 10 -evalue 0.001 -out BlastReport.txt -outfmt 6
+blastn -task dc-megablast -db database.fas -query query.fas -num_threads 10 -evalue 0.001 -perc_identity 30 -out BlastReport.txt -outfmt 6
