@@ -164,7 +164,7 @@ system($command);
 sub rundataset {
   my ($file1, $file2, $num) = ($_[0], $_[1], $_[2]);
 
-  my $command = "perl bin/CleanFastq_Demultiplex_RmveAdaptPhred2.pl $file1 $file2 $num data.out/$outfolder/tmp data.out/$outfolder/logs $barcodes $bcmismatch $MinLen $phred";
+  my $command = "perl bin/CleanFastq_Demultiplex_RmveAdaptPhred3.pl $file1 $file2 $num data.out/$outfolder/tmp data.out/$outfolder/logs $barcodes $bcmismatch $MinLen $phred";
   print("\nRunning: $command\n\n");
   system($command);
   }
